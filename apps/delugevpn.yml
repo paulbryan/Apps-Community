@@ -21,7 +21,7 @@
         extport3: '58846'
         intport4: '58946'
         extport4: '58946'
-        image: 'binhex/arch-delugevpn:1.3.15_18_ge050905b2-1-04'
+        image: 'binhex/arch-delugevpn:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job for {{pgrole}}'
@@ -83,7 +83,6 @@
           DELUGE_WEB_LOG_LEVEL: 'info'
           DEBUG: 'false'
 
-
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
       docker_container:
@@ -125,14 +124,14 @@
       wait_for:
         path: '/opt/appdata/{{pgrole}}/core.conf'
         state: present
-        delay: 5 
-        
+        delay: 5
+
     - name: Set enabled_plugins
       replace:
         dest: '/opt/appdata/{{pgrole}}/core.conf'
         regexp: '"enabled_plugins".*'
         replace: '"enabled_plugins": ["Extractor", "Label"],'
-        
+
     - name: Set move completed location
       lineinfile:
         path: '/opt/appdata/{{pgrole}}/core.conf'
@@ -153,15 +152,15 @@
         regexp: '"torrentfiles_location".*'
         line: '    "torrentfiles_location": "{{path.stdout}}/torrent",'
         state: present
-        
+
     - name: Setting move_completed
       lineinfile:
         path: '/opt/appdata/{{pgrole}}/core.conf'
         regexp: '"move_completed".*'
         line: '    "move_completed": true,'
-        state: present   
-        
-      when: not confcheck.stat.exists       
+        state: present
+
+      when: not confcheck.stat.exists
 
     - name: Restart {{pgrole}}
       docker_container:

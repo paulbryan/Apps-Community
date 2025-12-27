@@ -15,7 +15,7 @@
         pgrole: 'readarr'
         intport: '8787'
         extport: '8787'
-        image: 'ghcr.io/linuxserver/readarr:latest'
+        image: 'docker.io/linuxserver/readarr:0.4.19-nightly'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'

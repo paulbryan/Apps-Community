@@ -13,7 +13,7 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'audiobookshelf'
-        intport: '13378'
+        intport: '80'
         extport: '13378'
         image: 'ghcr.io/advplyr/audiobookshelf:latest'
 

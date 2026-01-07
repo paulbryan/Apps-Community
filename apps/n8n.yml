@@ -23,6 +23,7 @@
     - name: 'Adding Traefik'
       set_fact:
         pg_labels:
+          WEBHOOK_URL: 'https://{{cname}}/'
           traefik.enable: 'true'
           traefik.port: '{{intport}}'
           traefik.frontend.auth.forward.address: '{{gauth}}'

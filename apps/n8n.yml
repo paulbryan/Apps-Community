@@ -48,7 +48,7 @@
     - name: 'Setting {{pgrole}} ENV'
       set_fact:
         pg_env:
-          WEBHOOK_URL: 'https://{{cname}}/'
+          WEBHOOK_URL: 'https://{{pgrole}}.{{domain.stdout}}{{tldset}}/'
           PUID: '1000'
           PGID: '1000'
           N8N_BASIC_AUTH_ACTIVE: 'true'

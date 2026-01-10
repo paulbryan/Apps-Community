@@ -13,8 +13,8 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'actualbudget'
-        intport: '3000'
-        extport: '3000'
+        intport: '5006'
+        extport: '5006'
         image: 'ghcr.io/actualbudget/actual:sha-25ee19c-alpine'
 
     # CORE (MANDATORY) ############################################################

@@ -48,7 +48,7 @@
         pg_env:
           PUID: '1000'
           PGID: '1000'
-          TZ: 'Australia/Melbourne'
+          TZ: 'Australia/Perth'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

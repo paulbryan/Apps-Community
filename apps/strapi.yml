@@ -54,7 +54,7 @@
           ADMIN_JWT_SECRET: 'SzJCBmhQB9UIs2jV8JJdjgKPTDk+g7BZS3lnsuv30J4='
           TRANSFER_TOKEN_SALT: 'G6sf6krNNE0d5xxyOAlwIYXBM5J5uaFPd2J8UuYHQfc='
           JWT_SECRET: 'gNoiMWdA9FgzrYQbG8Hr+q//JKjxyw08vCp2F3Sz2T0='
-          NODE_ENV: 'production'
+          NODE_ENV: 'development'
           DATABASE_CLIENT: 'sqlite'
           DATABASE_FILENAME: '/srv/app/data.db'
 
@@ -64,7 +64,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
-        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /srv/app/package.json ]; then cd /srv/app && npx create-strapi-app@latest . --quickstart --no-run; fi && cd /srv/app && npm install && npm run develop"
+        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /srv/app/package.json ]; then cd /srv/app && npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud; fi && cd /srv/app && NODE_ENV=development npm run develop"
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'

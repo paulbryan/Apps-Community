@@ -40,7 +40,7 @@
       set_fact:
         pg_volumes:
           - '/etc/localtime:/etc/localtime:ro'
-          - '/opt/appdata/{{pgrole}}:/srv/app'
+          - '/opt/appdata/{{pgrole}}:/opt/app'
           - '{{path.stdout}}:{{path.stdout}}'
 
     - name: 'Setting {{pgrole}} ENV'
@@ -56,7 +56,7 @@
           JWT_SECRET: 'gNoiMWdA9FgzrYQbG8Hr+q//JKjxyw08vCp2F3Sz2T0='
           NODE_ENV: 'development'
           DATABASE_CLIENT: 'sqlite'
-          DATABASE_FILENAME: '/srv/app/data.db'
+          DATABASE_FILENAME: '/opt/app/data.db'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -64,7 +64,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
-        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /srv/app/package.json ]; then cd /srv/app && npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud; fi && cd /srv/app && NODE_ENV=development npm run develop"
+        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /opt/app/package.json ]; then cd /opt/app && npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud; fi && cd /opt/app && NODE_ENV=development npm run develop"
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'

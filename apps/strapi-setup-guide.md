@@ -75,7 +75,7 @@ pg_env:
   JWT_SECRET: 'toBeModified'            # ⚠️ CHANGE THIS
   NODE_ENV: 'production'                # Environment mode
   DATABASE_CLIENT: 'sqlite'             # Database type (sqlite/mysql/postgres)
-  DATABASE_FILENAME: '/srv/app/data.db' # SQLite database location
+  DATABASE_FILENAME: '/opt/app/data.db' # SQLite database location
 ```
 
 ## Database Configuration
@@ -129,7 +129,7 @@ The configuration mounts the following directories:
 ```yaml
 pg_volumes:
   - '/etc/localtime:/etc/localtime:ro'      # System time (read-only)
-  - '/opt/appdata/strapi:/srv/app'          # Strapi data directory
+  - '/opt/appdata/strapi:/opt/app'          # Strapi data directory
   - '{{path.stdout}}:{{path.stdout}}'       # PlexGuide path
 ```
 

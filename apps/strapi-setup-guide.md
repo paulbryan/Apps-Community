@@ -3,12 +3,15 @@
 ## Overview
 Strapi is a leading open-source headless CMS that's 100% JavaScript, fully customizable, and developer-first. This guide will help you deploy Strapi using the provided YML configuration.
 
+**Deployment Method**: This configuration uses the official Node.js Docker image and automatically installs Strapi on first run. This approach ensures you always get a working installation without relying on unofficial Docker images.
+
 ## Basic Information
 - **Default Port**: 1337
-- **Docker Image**: pierrecdn/strapi:latest (community-maintained)
+- **Docker Image**: node:18-alpine (Official Node.js image)
 - **Data Directory**: /opt/appdata/strapi
 - **Default Database**: SQLite (for simplicity)
-- **Note**: Strapi doesn't provide official pre-built Docker images; this uses a trusted community image
+- **Deployment Method**: Strapi is installed on first run using the official create-strapi-app
+- **Note**: Since Strapi doesn't provide pre-built Docker images, this configuration auto-installs Strapi in the Node.js container
 
 ## Prerequisites
 - Docker installed and running
@@ -22,8 +25,13 @@ Strapi is a leading open-source headless CMS that's 100% JavaScript, fully custo
    ansible-playbook /opt/communityapps/apps/strapi.yml
    ```
 
-2. **Access Strapi**
-   - Navigate to: `https://strapi.yourdomain.com`
+2. **Wait for Initial Setup**
+   - First deployment will take 3-5 minutes as Strapi is installed
+   - Check logs: `docker logs -f strapi`
+   - Wait for message: "Project created successfully!"
+
+3. **Access Strapi**
+   - Navigate to: `https://strapi.yourdomain.com/admin`
    - First-time setup will prompt you to create an admin account
 
 ## Environment Variables
@@ -172,41 +180,40 @@ Update the TZ variable to your timezone:
 TZ: 'Europe/London'  # or 'Asia/Tokyo', 'Australia/Sydney', etc.
 ```
 
-### Using Different Image Version
-To use a specific Strapi version:
+### Using Different Node.js Version
+To use a specific Node.js version:
 ```yaml
-image: 'pierrecdn/strapi:4.15.5'  # Specify version
+image: 'node:20-alpine'  # Use Node.js 20
+image: 'node:18-alpine'  # Use Node.js 18 (current default)
 ```
 
-**Available Community Images:**
-- `pierrecdn/strapi` - Current default, generally reliable
-- Other community images may be available on Docker Hub
-
-**Note**: All available Strapi images are community-maintained. For production environments, it's strongly recommended to build your own custom image following the [official Strapi Docker documentation](https://docs.strapi.io/cms/installation/docker).
+**Note**: Strapi is automatically installed on first run. The installation persists in `/opt/appdata/strapi`, so subsequent restarts are fast.
 
 ## Troubleshooting
 
-### Docker Image Issues
+### Initial Installation Taking Long
 
-**Error: "Cannot find module 'react'" or similar dependency errors**
+The first deployment installs Strapi from scratch, which can take 3-5 minutes:
 
-This indicates the Docker image has dependency issues. Try one of these solutions:
-
-1. **Switch to a different community image** (update in [strapi.yml](strapi.yml)):
-   ```yaml
-   image: 'pierrecdn/strapi:latest'  # Current default
-   # Or try: 'strapi/strapi:alpine' if available
+1. **Monitor progress:**
+   ```bash
+   docker logs -f strapi
    ```
 
-2. **Build your own custom image** (see "Building a Custom Docker Image" section below)
+2. **What you'll see:**
+   - Installing dependencies
+   - Creating Strapi project
+   - "Project created successfully!" when done
 
-3. **Check Docker Hub** for other community-maintained Strapi images
-
-**Error: "pull access denied" or "repository does not exist"**
-
-Strapi doesn't provide official Docker images. You must use:
-- A community-maintained image (like `pierrecdn/strapi`)
-- Build your own custom image (recommended for production)
+3. **If stuck for more than 10 minutes:**
+   ```bash
+   docker stop strapi
+   docker rm strapi
+   # Clean data directory
+   sudo rm -rf /opt/appdata/strapi/*
+   # Redeploy
+   ansible-playbook /opt/communityapps/apps/strapi.yml
+   ```
 
 ### Container Won't Start
 1. Check Docker logs:

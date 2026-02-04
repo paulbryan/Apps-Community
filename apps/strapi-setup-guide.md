@@ -5,9 +5,10 @@ Strapi is a leading open-source headless CMS that's 100% JavaScript, fully custo
 
 ## Basic Information
 - **Default Port**: 1337
-- **Official Image**: strapi/strapi:latest
+- **Docker Image**: naskio/strapi:latest (community-maintained)
 - **Data Directory**: /opt/appdata/strapi
 - **Default Database**: SQLite (for simplicity)
+- **Note**: Strapi doesn't provide official pre-built Docker images; this uses a trusted community image
 
 ## Prerequisites
 - Docker installed and running
@@ -174,8 +175,10 @@ TZ: 'Europe/London'  # or 'Asia/Tokyo', 'Australia/Sydney', etc.
 ### Using Different Image Version
 To use a specific Strapi version:
 ```yaml
-image: 'strapi/strapi:4.15.5'  # Specify version
+image: 'naskio/strapi:4.15.5'  # Specify version
 ```
+
+**Note**: The `naskio/strapi` image is community-maintained. For production, consider building your own custom image following the [official Strapi Docker documentation](https://docs.strapi.io/cms/installation/docker).
 
 ## Troubleshooting
 
@@ -216,6 +219,41 @@ sudo chmod -R 755 /opt/appdata/strapi
 - **Community Forum**: https://forum.strapi.io
 - **GitHub Repository**: https://github.com/strapi/strapi
 - **Discord Community**: https://discord.strapi.io
+
+## Building a Custom Docker Image (Advanced)
+
+For production environments, you may want to build your own custom Strapi Docker image instead of using the community image.
+
+### Create a Dockerfile
+
+Create a `Dockerfile` in your Strapi project directory:
+
+```dockerfile
+FROM node:20-alpine
+RUN apk update && apk add --no-cache build-base gcc autoconf automake zlib-dev libpng-dev vips-dev git
+ENV NODE_ENV=production
+WORKDIR /opt/app
+COPY package*.json ./
+RUN npm install --production
+COPY . .
+RUN npm run build
+EXPOSE 1337
+CMD ["npm", "start"]
+```
+
+### Build and Push
+
+```bash
+docker build -t your-registry/strapi:latest .
+docker push your-registry/strapi:latest
+```
+
+### Update YML Configuration
+
+Update the `image` field in [strapi.yml](strapi.yml):
+```yaml
+image: 'your-registry/strapi:latest'
+```
 
 ## Upgrading Strapi
 

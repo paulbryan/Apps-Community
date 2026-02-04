@@ -64,18 +64,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
-        command: 
-          - /bin/sh
-          - -c
-          - |
-            apk add --no-cache python3 make g++ && \
-            if [ ! -f "/srv/app/package.json" ]; then \
-              cd /srv/app && \
-              npx create-strapi-app@latest . --quickstart --no-run; \
-            fi && \
-            cd /srv/app && \
-            npm install && \
-            npm run develop
+        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /srv/app/package.json ]; then cd /srv/app && npx create-strapi-app@latest . --quickstart --no-run; fi && cd /srv/app && npm install && npm run develop"
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'

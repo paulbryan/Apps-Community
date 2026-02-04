@@ -7,7 +7,8 @@ Strapi is a leading open-source headless CMS that's 100% JavaScript, fully custo
 
 ## Basic Information
 - **Default Port**: 1337
-- **Docker Image**: node:18-alpine (Official Node.js image)
+- **Docker Image**: node:20-alpine (Official Node.js image)
+- **Node.js Version**: 20.x (required by Strapi)
 - **Data Directory**: /opt/appdata/strapi
 - **Default Database**: SQLite (for simplicity)
 - **Deployment Method**: Strapi is installed on first run using the official create-strapi-app
@@ -183,9 +184,11 @@ TZ: 'Europe/London'  # or 'Asia/Tokyo', 'Australia/Sydney', etc.
 ### Using Different Node.js Version
 To use a specific Node.js version:
 ```yaml
-image: 'node:20-alpine'  # Use Node.js 20
-image: 'node:18-alpine'  # Use Node.js 18 (current default)
+image: 'node:20-alpine'  # Use Node.js 20 (current default, required)
+image: 'node:22-alpine'  # Use Node.js 22 (also supported)
 ```
+
+**Important**: Strapi requires Node.js >=20.0.0 <=24.x.x. Do not use Node.js 18 or older.
 
 **Note**: Strapi is automatically installed on first run. The installation persists in `/opt/appdata/strapi`, so subsequent restarts are fast.
 

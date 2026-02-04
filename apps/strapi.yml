@@ -57,6 +57,9 @@
           NODE_ENV: 'development'
           DATABASE_CLIENT: 'sqlite'
           DATABASE_FILENAME: '/opt/app/data.db'
+          CI: 'true'
+          STRAPI_DISABLE_UPDATE_NOTIFICATION: 'true'
+          STRAPI_TELEMETRY_DISABLED: 'true'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -64,7 +67,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
-        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /opt/app/package.json ]; then cd /opt/app && npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud; fi && cd /opt/app && NODE_ENV=development npm run develop"
+        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /opt/app/package.json ]; then cd /opt/app && printf 'n\n' | npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud || true; fi && cd /opt/app && [ -f package.json ] && NODE_ENV=development npm run develop"
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'

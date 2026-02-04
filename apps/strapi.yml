@@ -12,7 +12,7 @@
         pgrole: 'strapi'
         intport: '1337'
         extport: '1337'
-        image: 'naskio/strapi:latest'
+        image: 'pierrecdn/strapi:latest'
 
     # CORE (MANDATORY) ############################################################
     - name: 'Including cron job'

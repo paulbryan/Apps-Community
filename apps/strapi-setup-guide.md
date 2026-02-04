@@ -5,7 +5,7 @@ Strapi is a leading open-source headless CMS that's 100% JavaScript, fully custo
 
 ## Basic Information
 - **Default Port**: 1337
-- **Docker Image**: naskio/strapi:latest (community-maintained)
+- **Docker Image**: pierrecdn/strapi:latest (community-maintained)
 - **Data Directory**: /opt/appdata/strapi
 - **Default Database**: SQLite (for simplicity)
 - **Note**: Strapi doesn't provide official pre-built Docker images; this uses a trusted community image
@@ -175,12 +175,38 @@ TZ: 'Europe/London'  # or 'Asia/Tokyo', 'Australia/Sydney', etc.
 ### Using Different Image Version
 To use a specific Strapi version:
 ```yaml
-image: 'naskio/strapi:4.15.5'  # Specify version
+image: 'pierrecdn/strapi:4.15.5'  # Specify version
 ```
 
-**Note**: The `naskio/strapi` image is community-maintained. For production, consider building your own custom image following the [official Strapi Docker documentation](https://docs.strapi.io/cms/installation/docker).
+**Available Community Images:**
+- `pierrecdn/strapi` - Current default, generally reliable
+- Other community images may be available on Docker Hub
+
+**Note**: All available Strapi images are community-maintained. For production environments, it's strongly recommended to build your own custom image following the [official Strapi Docker documentation](https://docs.strapi.io/cms/installation/docker).
 
 ## Troubleshooting
+
+### Docker Image Issues
+
+**Error: "Cannot find module 'react'" or similar dependency errors**
+
+This indicates the Docker image has dependency issues. Try one of these solutions:
+
+1. **Switch to a different community image** (update in [strapi.yml](strapi.yml)):
+   ```yaml
+   image: 'pierrecdn/strapi:latest'  # Current default
+   # Or try: 'strapi/strapi:alpine' if available
+   ```
+
+2. **Build your own custom image** (see "Building a Custom Docker Image" section below)
+
+3. **Check Docker Hub** for other community-maintained Strapi images
+
+**Error: "pull access denied" or "repository does not exist"**
+
+Strapi doesn't provide official Docker images. You must use:
+- A community-maintained image (like `pierrecdn/strapi`)
+- Build your own custom image (recommended for production)
 
 ### Container Won't Start
 1. Check Docker logs:

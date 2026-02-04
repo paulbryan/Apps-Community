@@ -54,12 +54,14 @@
           ADMIN_JWT_SECRET: 'SzJCBmhQB9UIs2jV8JJdjgKPTDk+g7BZS3lnsuv30J4='
           TRANSFER_TOKEN_SALT: 'G6sf6krNNE0d5xxyOAlwIYXBM5J5uaFPd2J8UuYHQfc='
           JWT_SECRET: 'gNoiMWdA9FgzrYQbG8Hr+q//JKjxyw08vCp2F3Sz2T0='
-          NODE_ENV: 'development'
+          NODE_ENV: 'production'
           DATABASE_CLIENT: 'sqlite'
           DATABASE_FILENAME: '/opt/app/data.db'
           CI: 'true'
           STRAPI_DISABLE_UPDATE_NOTIFICATION: 'true'
           STRAPI_TELEMETRY_DISABLED: 'true'
+          HOST: '0.0.0.0'
+          PORT: '1337'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'
@@ -67,7 +69,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: yes
-        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /opt/app/package.json ]; then cd /opt/app && printf 'n\n' | npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud || true; fi && cd /opt/app && [ -f package.json ] && NODE_ENV=development npm run develop"
+        command: sh -c "apk add --no-cache python3 make g++ && if [ ! -f /opt/app/package.json ]; then cd /opt/app && printf 'n\n' | npx -y create-strapi-app@latest . --quickstart --no-run --skip-cloud || true; fi && cd /opt/app && [ -f package.json ] && npm run build && NODE_ENV=production npm start"
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
         volumes: '{{pg_volumes}}'

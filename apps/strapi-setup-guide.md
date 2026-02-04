@@ -3,7 +3,7 @@
 ## Overview
 Strapi is a leading open-source headless CMS that's 100% JavaScript, fully customizable, and developer-first. This guide will help you deploy Strapi using the provided YML configuration.
 
-**Deployment Method**: This configuration uses the official Node.js Docker image and automatically installs Strapi on first run. This approach ensures you always get a working installation without relying on unofficial Docker images.
+**Deployment Method**: This configuration uses the official Node.js Docker image and automatically installs Strapi on first run in production mode. This approach ensures you always get a working installation without relying on unofficial Docker images.
 
 ## Basic Information
 - **Default Port**: 1337
@@ -27,9 +27,10 @@ Strapi is a leading open-source headless CMS that's 100% JavaScript, fully custo
    ```
 
 2. **Wait for Initial Setup**
-   - First deployment will take 3-5 minutes as Strapi is installed
+   - First deployment will take 5-10 minutes as Strapi is installed and built
    - Check logs: `docker logs -f strapi`
-   - Wait for message: "Project created successfully!"
+   - Wait for message: "Project created successfully!" then "Server started"
+   - Production build takes longer than development mode
 
 3. **Access Strapi**
    - Navigate to: `https://strapi.yourdomain.com/admin`
@@ -76,6 +77,8 @@ pg_env:
   NODE_ENV: 'production'                # Environment mode
   DATABASE_CLIENT: 'sqlite'             # Database type (sqlite/mysql/postgres)
   DATABASE_FILENAME: '/opt/app/data.db' # SQLite database location
+  HOST: '0.0.0.0'                       # Listen on all interfaces
+  PORT: '1337'                          # Strapi port
 ```
 
 ## Database Configuration
@@ -196,7 +199,7 @@ image: 'node:22-alpine'  # Use Node.js 22 (also supported)
 
 ### Initial Installation Taking Long
 
-The first deployment installs Strapi from scratch, which can take 3-5 minutes:
+The first deployment installs and builds Strapi from scratch, which can take 5-10 minutes:
 
 1. **Monitor progress:**
    ```bash
@@ -206,9 +209,11 @@ The first deployment installs Strapi from scratch, which can take 3-5 minutes:
 2. **What you'll see:**
    - Installing dependencies
    - Creating Strapi project
+   - Building admin panel (takes longest)
    - "Project created successfully!" when done
+   - "Server started" when ready
 
-3. **If stuck for more than 10 minutes:**
+3. **If stuck for more than 15 minutes:**
    ```bash
    docker stop strapi
    docker rm strapi

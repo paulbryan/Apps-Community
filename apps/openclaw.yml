@@ -127,15 +127,16 @@
         name: '{{pgrole_cli}}'
         image: '{{image}}'
         pull: no
-        entrypoint: ['node', 'dist/index.js']
+        entrypoint: ['sh', '-c']
+        command: 'sleep infinity'
         tty: true
         interactive: true
         volumes: '{{pg_volumes}}'
         env: '{{pg_env_cli}}'
-        restart_policy: 'no'
+        restart_policy: unless-stopped
         networks:
           - name: plexguide
             aliases:
               - '{{pgrole_cli}}'
-        state: stopped
+        state: started
 ##PG-Community

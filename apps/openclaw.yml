@@ -1,0 +1,114 @@
+#!/bin/bash
+# Author(s):  MHA-Team
+# GNU:        General Public License v3.0
+################################################################################
+---
+- hosts: localhost
+  gather_facts: false
+  tasks:
+    # FACTS #######################################################################
+    - name: 'Set Known Facts'
+      set_fact:
+        pgrole: 'openclaw'
+        pgrole_cli: 'openclaw-cli'
+        intport: '18789'
+        extport: '18789'
+        bridgeport: '18790'
+        image: 'openclaw:local'
+        repo_path: '/opt/appdata/openclaw/repo'
+        repo_url: 'https://github.com/openclaw/openclaw.git'
+        repo_branch: 'main'
+
+    # CORE (MANDATORY) ############################################################
+    - name: 'Including cron job'
+      include_tasks: '/opt/communityapps/apps/_core.yml'
+
+    # LABELS ######################################################################
+    - name: 'Adding Traefik'
+      set_fact:
+        pg_labels:
+          traefik.enable: 'true'
+          traefik.port: '{{intport}}'
+          traefik.frontend.auth.forward.address: '{{gauth}}'
+          traefik.frontend.rule: 'Host:{{pgrole}}.{{domain.stdout}}{{tldset}}{{cname}}'
+          traefik.frontend.headers.SSLHost: '{{domain.stdout}}'
+          traefik.frontend.headers.SSLRedirect: 'true'
+          traefik.frontend.headers.STSIncludeSubdomains: 'true'
+          traefik.frontend.headers.STSPreload: 'true'
+          traefik.frontend.headers.STSSeconds: '315360000'
+          traefik.frontend.headers.browserXSSFilter: 'true'
+          traefik.frontend.headers.contentTypeNosniff: 'true'
+          traefik.frontend.headers.customResponseHeaders: 'X-Robots-Tag:noindex,nofollow,nosnippet,noarchive,notranslate,noimageindex'
+          traefik.frontend.headers.forceSTSHeader: 'true'
+
+    - name: 'Setting {{pgrole}} Volumes'
+      set_fact:
+        pg_volumes:
+          - '/opt/appdata/{{pgrole}}:/home/node/.openclaw'
+          - '/opt/appdata/{{pgrole}}/workspace:/home/node/.openclaw/workspace'
+
+    - name: 'Setting {{pgrole}} ENV'
+      set_fact:
+        pg_env:
+          HOME: '/home/node'
+          TERM: 'xterm-256color'
+          OPENCLAW_GATEWAY_TOKEN: ''
+          OPENCLAW_GATEWAY_BIND: 'lan'
+
+    - name: 'Setting {{pgrole_cli}} ENV'
+      set_fact:
+        pg_env_cli:
+          HOME: '/home/node'
+          TERM: 'xterm-256color'
+          OPENCLAW_GATEWAY_TOKEN: ''
+          BROWSER: 'echo'
+
+    - name: 'Syncing OpenClaw repo'
+      ansible.builtin.git:
+        repo: '{{repo_url}}'
+        dest: '{{repo_path}}'
+        version: '{{repo_branch}}'
+        update: true
+
+    - name: 'Building OpenClaw image'
+      ansible.builtin.command: docker build -t {{image}} -f Dockerfile .
+      args:
+        chdir: '{{repo_path}}'
+
+    # MAIN DEPLOYMENT #############################################################
+    - name: 'Deploying {{pgrole}}'
+      docker_container:
+        name: '{{pgrole}}'
+        image: '{{image}}'
+        pull: no
+        command: node dist/index.js gateway --bind {{pg_env.OPENCLAW_GATEWAY_BIND}} --port {{intport}}
+        published_ports:
+          - '{{ports.stdout}}{{extport}}:{{intport}}'
+          - '{{ports.stdout}}{{bridgeport}}:{{bridgeport}}'
+        volumes: '{{pg_volumes}}'
+        env: '{{pg_env}}'
+        restart_policy: unless-stopped
+        networks:
+          - name: plexguide
+            aliases:
+              - '{{pgrole}}'
+        state: started
+        labels: '{{pg_labels}}'
+
+    - name: 'Creating {{pgrole_cli}} container'
+      docker_container:
+        name: '{{pgrole_cli}}'
+        image: '{{image}}'
+        pull: no
+        entrypoint: ['node', 'dist/index.js']
+        tty: true
+        stdin_open: true
+        volumes: '{{pg_volumes}}'
+        env: '{{pg_env_cli}}'
+        restart_policy: 'no'
+        networks:
+          - name: plexguide
+            aliases:
+              - '{{pgrole_cli}}'
+        state: stopped
+##PG-Community

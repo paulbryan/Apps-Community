@@ -124,7 +124,7 @@
         pull: no
         entrypoint: ['node', 'dist/index.js']
         tty: true
-        stdin_open: true
+        interactive: true
         volumes: '{{pg_volumes}}'
         env: '{{pg_env_cli}}'
         restart_policy: 'no'

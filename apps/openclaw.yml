@@ -52,7 +52,7 @@
         pg_env:
           HOME: '/home/node'
           TERM: 'xterm-256color'
-          OPENCLAW_GATEWAY_TOKEN: ''
+          OPENCLAW_GATEWAY_TOKEN: '9f25bc7ea86035ae3223159a9633cd4dcc8e319ecdc5f4874e9946c202a28b35'
           OPENCLAW_GATEWAY_BIND: 'lan'
 
     - name: 'Setting {{pgrole_cli}} ENV'
@@ -60,7 +60,7 @@
         pg_env_cli:
           HOME: '/home/node'
           TERM: 'xterm-256color'
-          OPENCLAW_GATEWAY_TOKEN: ''
+          OPENCLAW_GATEWAY_TOKEN: '9f25bc7ea86035ae3223159a9633cd4dcc8e319ecdc5f4874e9946c202a28b35'
           BROWSER: 'echo'
 
     - name: 'Syncing OpenClaw repo'

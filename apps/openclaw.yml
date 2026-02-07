@@ -103,7 +103,7 @@
         name: '{{pgrole}}'
         image: '{{image}}'
         pull: no
-        command: node dist/index.js gateway --bind {{pg_env.OPENCLAW_GATEWAY_BIND}} --port {{intport}}
+        command: node dist/index.js gateway --bind {{pg_env.OPENCLAW_GATEWAY_BIND}} --port {{intport}} --allow-unconfigured
         published_ports:
           - '{{ports.stdout}}{{extport}}:{{intport}}'
           - '{{ports.stdout}}{{bridgeport}}:{{bridgeport}}'

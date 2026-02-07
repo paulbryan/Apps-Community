@@ -83,7 +83,7 @@
     - name: 'Disabling Docker credential helpers for build'
       copy:
         dest: '/tmp/openclaw-docker-config/config.json'
-        content: '{"auths":{},"credsStore":""}\n'
+        content: '{"auths":{"https://index.docker.io/v1/":{}},"credsStore":"","credHelpers":{}}\n'
         mode: '0644'
 
     - name: 'Building OpenClaw image'
@@ -95,6 +95,7 @@
         DOCKER_AUTH_CONFIG: '{}'
         HOME: '/tmp/openclaw-docker-home'
         XDG_RUNTIME_DIR: '/tmp'
+        DOCKER_BUILDKIT: '0'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

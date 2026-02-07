@@ -10,7 +10,6 @@
     - name: 'Set Known Facts'
       set_fact:
         pgrole: 'openclaw'
-        pgrole_cli: 'openclaw-cli'
         intport: '18789'
         extport: '18789'
         bridgeport: '18790'
@@ -60,13 +59,6 @@
           OPENCLAW_GATEWAY_TOKEN: '{{openclaw_gateway_token}}'
           OPENCLAW_GATEWAY_BIND: 'lan'
 
-    - name: 'Setting {{pgrole_cli}} ENV'
-      set_fact:
-        pg_env_cli:
-          HOME: '/home/node'
-          TERM: 'xterm-256color'
-          OPENCLAW_GATEWAY_TOKEN: '{{openclaw_gateway_token}}'
-          BROWSER: 'echo'
 
     - name: 'Syncing OpenClaw repo'
       git:
@@ -122,21 +114,4 @@
         state: started
         labels: '{{pg_labels}}'
 
-    - name: 'Creating {{pgrole_cli}} container'
-      docker_container:
-        name: '{{pgrole_cli}}'
-        image: '{{image}}'
-        pull: no
-        entrypoint: ['sh', '-c']
-        command: 'sleep infinity'
-        tty: true
-        interactive: true
-        volumes: '{{pg_volumes}}'
-        env: '{{pg_env_cli}}'
-        restart_policy: unless-stopped
-        networks:
-          - name: plexguide
-            aliases:
-              - '{{pgrole_cli}}'
-        state: started
 ##PG-Community

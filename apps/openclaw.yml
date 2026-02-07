@@ -87,7 +87,7 @@
         mode: '0644'
 
     - name: 'Building OpenClaw image'
-      command: docker build -t {{image}} -f Dockerfile .
+      command: docker --config /tmp/openclaw-docker-config build -t {{image}} -f Dockerfile .
       args:
         chdir: '{{repo_path}}'
       environment:

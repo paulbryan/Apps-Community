@@ -70,10 +70,24 @@
         version: '{{repo_branch}}'
         update: true
 
+    - name: 'Creating Docker config directory'
+      file:
+        path: '/tmp/openclaw-docker-config'
+        state: directory
+        mode: '0755'
+
+    - name: 'Disabling Docker credential helpers for build'
+      copy:
+        dest: '/tmp/openclaw-docker-config/config.json'
+        content: "{}\n"
+        mode: '0644'
+
     - name: 'Building OpenClaw image'
       command: docker build -t {{image}} -f Dockerfile .
       args:
         chdir: '{{repo_path}}'
+      environment:
+        DOCKER_CONFIG: '/tmp/openclaw-docker-config'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

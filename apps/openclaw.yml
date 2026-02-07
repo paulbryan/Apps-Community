@@ -71,16 +71,19 @@
         update: true
         force: true
 
-    - name: 'Creating Docker config directory'
+    - name: 'Creating Docker build temp directories'
       file:
-        path: '/tmp/openclaw-docker-config'
+        path: '{{item}}'
         state: directory
         mode: '0755'
+      with_items:
+        - '/tmp/openclaw-docker-config'
+        - '/tmp/openclaw-docker-home'
 
     - name: 'Disabling Docker credential helpers for build'
       copy:
         dest: '/tmp/openclaw-docker-config/config.json'
-        content: "{}\n"
+        content: '{"auths":{},"credsStore":""}\n'
         mode: '0644'
 
     - name: 'Building OpenClaw image'
@@ -89,6 +92,9 @@
         chdir: '{{repo_path}}'
       environment:
         DOCKER_CONFIG: '/tmp/openclaw-docker-config'
+        DOCKER_AUTH_CONFIG: '{}'
+        HOME: '/tmp/openclaw-docker-home'
+        XDG_RUNTIME_DIR: '/tmp'
 
     # MAIN DEPLOYMENT #############################################################
     - name: 'Deploying {{pgrole}}'

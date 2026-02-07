@@ -116,4 +116,14 @@
         state: started
         labels: '{{pg_labels}}'
 
+    - name: 'Checking gh CLI'
+      command: docker exec {{pgrole}} sh -lc 'command -v gh'
+      register: gh_check
+      changed_when: false
+      failed_when: false
+
+    - name: 'Installing gh CLI'
+      command: docker exec -u 0 {{pgrole}} sh -lc 'apt-get update && apt-get install -y --no-install-recommends gh && rm -rf /var/lib/apt/lists/*'
+      when: gh_check.rc != 0
+
 ##PG-Community

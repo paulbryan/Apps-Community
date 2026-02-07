@@ -64,14 +64,14 @@
           BROWSER: 'echo'
 
     - name: 'Syncing OpenClaw repo'
-      ansible.builtin.git:
+      git:
         repo: '{{repo_url}}'
         dest: '{{repo_path}}'
         version: '{{repo_branch}}'
         update: true
 
     - name: 'Building OpenClaw image'
-      ansible.builtin.command: docker build -t {{image}} -f Dockerfile .
+      command: docker build -t {{image}} -f Dockerfile .
       args:
         chdir: '{{repo_path}}'
 

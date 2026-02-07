@@ -69,6 +69,7 @@
         dest: '{{repo_path}}'
         version: '{{repo_branch}}'
         update: true
+        force: true
 
     - name: 'Creating Docker config directory'
       file:

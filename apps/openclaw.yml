@@ -70,6 +70,20 @@
         update: true
         force: true
 
+    - name: 'Adding Gemini CLI to Dockerfile'
+      lineinfile:
+        path: '{{repo_path}}/Dockerfile'
+        insertafter: '^RUN pnpm install --frozen-lockfile'
+        line: 'RUN npm install -g @google/gemini-cli'
+        state: present
+
+    - name: 'Adding ClawHub CLI to Dockerfile'
+      lineinfile:
+        path: '{{repo_path}}/Dockerfile'
+        insertafter: '^RUN npm install -g @google/gemini-cli'
+        line: 'RUN npm install -g clawhub'
+        state: present
+
     - name: 'Creating Docker build temp directories'
       file:
         path: '{{item}}'

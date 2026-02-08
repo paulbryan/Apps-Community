@@ -88,13 +88,13 @@
       lineinfile:
         path: '{{repo_path}}/Dockerfile'
         insertafter: '^RUN npm install -g clawhub'
-        line: 'RUN npm install -g opencode'
+        line: 'RUN npm install -g opencode-ai'
         state: present
 
     - name: 'Adding Claude Code CLI to Dockerfile'
       lineinfile:
         path: '{{repo_path}}/Dockerfile'
-        insertafter: '^RUN npm install -g opencode'
+        insertafter: '^RUN npm install -g opencode-ai'
         line: 'RUN npm install -g @anthropic-ai/claude-code'
         state: present
 

@@ -84,6 +84,27 @@
         line: 'RUN npm install -g clawhub'
         state: present
 
+    - name: 'Adding OpenCode CLI to Dockerfile'
+      lineinfile:
+        path: '{{repo_path}}/Dockerfile'
+        insertafter: '^RUN npm install -g clawhub'
+        line: 'RUN npm install -g opencode'
+        state: present
+
+    - name: 'Adding Claude Code CLI to Dockerfile'
+      lineinfile:
+        path: '{{repo_path}}/Dockerfile'
+        insertafter: '^RUN npm install -g opencode'
+        line: 'RUN npm install -g @anthropic-ai/claude-code'
+        state: present
+
+    - name: 'Adding Codex CLI to Dockerfile'
+      lineinfile:
+        path: '{{repo_path}}/Dockerfile'
+        insertafter: '^RUN npm install -g @anthropic-ai/claude-code'
+        line: 'RUN npm install -g @openai/codex'
+        state: present
+
     - name: 'Creating Docker build temp directories'
       file:
         path: '{{item}}'
